@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { load_user, error_handler } from '../redux-store/actions/authActionCreator'
+import { load_user, logout, clear_error } from '../redux-store/actions/authActionCreator'
 import Axios from 'axios'
 
 class IsLogged extends Component {
@@ -17,7 +17,18 @@ class IsLogged extends Component {
                     .then(res => {
                         this.props.load_user(token, res.data.user)
                     })
-                    .catch(err => this.props.error_handler(err))
+                    .catch(err => {
+                        const error = {
+                            status: err.response.status,
+                            status_text: err.response.statusText,
+                            message: err.response.data.message
+                        }
+                        this.props.logout(error)
+                        console.clear()
+                        setTimeout(() => {
+                            this.props.clear_error()
+                        }, 3000)
+                    })
 
                 return <p>loading ...</p>
             } else {
@@ -33,7 +44,8 @@ const mapStateToProps = (store) => ({ ...store })
 const dispatchStateToProps = (dispatch) => {
     return {
         load_user: (token, user) => dispatch(load_user(token, user)),
-        error_handler: (error) => dispatch(error_handler(error))
+        clear_error: () => dispatch(clear_error()),
+        logout: () => dispatch(logout())
     }
 }
 
