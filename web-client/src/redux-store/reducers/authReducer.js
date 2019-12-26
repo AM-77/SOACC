@@ -23,7 +23,8 @@ const authReducer = (store = initStore, action) => {
                 ...store,
                 islogged: false,
                 token: null,
-                user: null
+                user: null,
+                error: action.payload
             }
 
         case Types.LOAD_USER:
@@ -35,10 +36,15 @@ const authReducer = (store = initStore, action) => {
             }
 
         case Types.ERROR:
-            console.log("Error reducer: ", action)
             return {
                 ...store,
-                error: action.payload.error
+                error: action.payload
+            }
+
+        case Types.CREAL_ERROR:
+            return {
+                ...store,
+                error: null
             }
 
         default:
