@@ -22,13 +22,17 @@ class NavBar extends Component {
                         ?
                         <div className="nav-logged">
                             <h4 className="title"><b>Account:</b> <span>{this.props.user.email}</span></h4>
-                            <button className="logout-btn" onClick={this.logout}>logout</button>
+                            <div className="nav-links">
+                                <button className="logout-btn" onClick={this.logout}>logout</button>
+                            </div>
                         </div>
                         :
                         <div className="nav-links">
                             <NavLink activeClassName="active" className="nav-link" to="/login">Login</NavLink>
                             <NavLink activeClassName="active" className="nav-link" to="/subscribe">Subscribe</NavLink>
                         </div>
+
+
                 }
             </div>
         )
