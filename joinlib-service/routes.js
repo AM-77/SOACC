@@ -3,8 +3,7 @@ const joinlib_router = express.Router()
 const auth = require("./middleware/auth")
 const Student = require("./models/student")
 
-joinlib_router.get("/all", (req, res, next) => {
-    console.log("object")
+joinlib_router.get("/all", auth, (req, res, next) => {
     Student.find().exec()
         .then(result => res.status(200).json({ all: result }))
         .catch(error => res.status(500).json({ error }))

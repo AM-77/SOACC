@@ -8,13 +8,7 @@ const auth = require("./middleware/auth")
 const User = require("./models/user")
 const Student = require("./models/student")
 
-auth_router.get("/", (req, res, next) => {
-    Student.find().exec()
-        .then(students => { res.status(200).json({ students }) })
-        .catch(error => res.status(500).json({ error, message: "there was an error" }))
-})
-
-auth_router.get("/students", (req, res, next) => {
+auth_router.get("/students", auth, (req, res, next) => {
     Student.find().exec()
         .then(student => { res.status(200).json({ student }) })
         .catch(error => res.status(500).json({ error, message: "there was an error" }))
@@ -27,8 +21,8 @@ auth_router.get("/student/:mat", auth, (req, res, next) => {
         .catch(error => res.status(500).json({ error, message: "there was an error" }))
 })
 
-auth_router.get("/:id", auth, (req, res, next) => {
-    let _id = req.params.id
+auth_router.get("/", auth, (req, res, next) => {
+    let _id = req.verified_token._id
     User.findOne({ _id }).exec()
         .then(user => { res.status(200).json({ user }) })
         .catch(error => res.status(500).json({ error, message: "there was an error" }))
@@ -90,7 +84,6 @@ auth_router.post("/student", auth, (req, res, next) => {
         .catch(error => res.status(500).json(error))
 })
 
-
 auth_router.post("/login", (req, res, next) => {
     let { email, password } = req.body
     User.findOne({ email }).exec()
@@ -99,7 +92,7 @@ auth_router.post("/login", (req, res, next) => {
                 bcryptjs.compare(String(password), user.password, (error, result) => {
                     if (error || !result) res.status(401).json({ error, message: "Auth Failed." })
                     else {
-                        let token = jwt.sign({ email, _id: user._id }, process.env.JWT_KEY || "GetBooks", { expiresIn: "5d" })
+                        let token = jwt.sign({ _id: user._id }, process.env.JWT_KEY || "15zM4%A2%p7$q5Ye1+A0$k4r", { expiresIn: "5d" })
                         res.status(200).json({ user, message: "Logged In.", token })
                     }
                 })
