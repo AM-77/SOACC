@@ -7,9 +7,10 @@ export const login = (token, user) => {
     }
 }
 
-export const logout = () => {
+export const logout = (error = null) => {
     return {
-        type: Types.LOGOUT
+        type: Types.LOGOUT,
+        payload: error
     }
 }
 
@@ -21,9 +22,21 @@ export const load_user = (token, user) => {
 }
 
 export const error_handler = (error) => {
-    console.log("Action creator: ", error)
+    if (error.status === 401) {
+        return {
+            type: Types.LOGOUT,
+            payload: error
+        }
+    } else {
+        return {
+            type: Types.ERROR,
+            payload: error
+        }
+    }
+}
+
+export const clear_error = () => {
     return {
-        type: Types.ERROR,
-        payload: { error }
+        type: Types.CREAL_ERROR
     }
 } 
