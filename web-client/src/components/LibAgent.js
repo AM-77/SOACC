@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { error_handler } from '../redux-store/actions/authActionCreator'
+import { error_handler, clear_error } from '../redux-store/actions/authActionCreator'
 import Axios from 'axios'
 
 class LibAgent extends Component {
@@ -19,7 +19,14 @@ class LibAgent extends Component {
             .then(res => {
                 this.setState(state => ({ join_is_open: res.data.result[0].join_is_open }))
             })
-            .catch(err => this.props.error_handler(err))
+            .catch(err => {
+                const error = {
+                    status: err.response.status,
+                    status_text: err.response.statusText,
+                    message: err.response.data.message
+                }
+                this.fire_error(error)
+            })
     }
 
     findStudent = e => {
@@ -27,25 +34,82 @@ class LibAgent extends Component {
         if (mat !== "")
             Axios.get("http://localhost:3301/auth-service/student/" + mat, { headers: { authorization: "Bearer " + this.props.token } })
                 .then(res => {
-                    this.setState(state => ({ found_student: res.data.student, student_joind: res.data.student.joinedlib }))
-                    // Notify the User
+                    if (res.data.student)
+                        this.setState(state => ({ found_student: res.data.student, student_joind: res.data.student.joinedlib }))
+                    else
+                        this.setState(state => ({ found_student: null, student_joind: null }))
                 })
-                .catch(err => this.props.error_handler(err))
+                .catch(err => {
+                    const error = {
+                        status: err.response.status,
+                        status_text: err.response.statusText,
+                        message: err.response.data.message
+                    }
+                    this.fire_error(error)
+                })
     }
 
     onCheck = e => {
         Axios.post("http://localhost:3302/joinlib-service/joinlib/" + this.state.found_student.mat, { joinlib: !this.state.student_joind }, { headers: { authorization: "Bearer " + this.props.token } })
             .then(res => {
-                this.setState(state => ({ student_joind: !this.state.student_joind }))
+                !this.state.student_joind
+                    ?
+                    this.setState(state => ({ student_joind: !this.state.student_joind, success: { status: "Subscribe", message: "The Student Subscribed In The Library Successfuly." } }))
+                    :
+                    this.setState(state => ({ student_joind: !this.state.student_joind, success: { status: "Unsubscribe", message: "The Student Unsubscribed From The Library Successfuly." } }))
+
+
+                this.clear_success()
             })
-            .catch(err => this.props.error_handler(err))
+            .catch(err => {
+                const error = {
+                    status: err.response.status,
+                    status_text: err.response.statusText,
+                    message: err.response.data.message
+                }
+                this.fire_error(error)
+            })
+    }
+
+    fire_error = error => {
+        this.props.error_handler(error)
+        console.clear()
+        setTimeout(() => {
+            this.props.clear_error()
+        }, 3000)
+    }
+
+    clear_success = () => {
+        setTimeout(() => {
+            this.setState(state => ({ success: null }))
+        }, 3000)
     }
 
     render() {
         return (
             <div>
                 <div className="scol-agent-container">
-                    <h1>Lib Agent</h1>
+                    <div className="head">
+                        <h1>Lib Agent</h1>
+                        {
+                            this.props.error
+                                ?
+                                <div className="error-container">
+                                    <p className="the-error"><b className="error-status">{this.props.error.status_text}: </b><span className="error-message">{this.props.error.message}</span></p>
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            this.state.success
+                                ?
+                                <div className="success-container">
+                                    <p className="the-success"><b className="success-status">{this.state.success.status}: </b><span className="success-message">{this.state.success.message}</span></p>
+                                </div>
+                                :
+                                null
+                        }
+                    </div>
 
                     {
                         this.state.join_is_open
@@ -90,7 +154,9 @@ class LibAgent extends Component {
                                 </div>
                             </div>
                             :
-                            <h4 className="sorry" >Sorry!!! Joining The Library Is Closed For The Moment.</h4>
+                            <div className="error-container">
+                                <p className="the-error"><b className="error-status">Sorry !!! </b><span className="error-message">Joining The Library Is Closed For The Moment.</span></p>
+                            </div>
                     }
 
                 </div>
@@ -99,13 +165,10 @@ class LibAgent extends Component {
     }
 }
 
-
-
 const mapStateToProps = (store) => ({ ...store })
-const dispatchStateToProps = (dispatch) => {
-    return {
-        error_handler: (error) => dispatch(error_handler(error))
-    }
-}
+const dispatchStateToProps = (dispatch) => ({
+    error_handler: (error) => dispatch(error_handler(error)),
+    clear_error: () => dispatch(clear_error())
+})
 
 export default connect(mapStateToProps, dispatchStateToProps)(LibAgent)
