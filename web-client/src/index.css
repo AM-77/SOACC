@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+h1{
+    margin-top: 50px;
+    font-family: "Source sans pro";
+    font-weight: 700;
+}
+
 .container{
     display: block;
     width: 95%;
@@ -21,7 +27,8 @@ h2.title{
     text-align: center;
     font-size: 30px;
     color: #1e8857;
-    margin-top: 35px;
+    margin-top: 25px;
+    margin-bottom: 25px;
     text-decoration: underline;
 }
 
@@ -122,7 +129,7 @@ button:hover{
     background: #dcdcdc00;
     border: none;
     opacity: 1;
-    color: #1e8857;
+    color: #C6C6C6;
     width: auto;
     margin: 0;
     margin-right: 15px;
@@ -139,7 +146,7 @@ button:hover{
     display: block;
     height: 2px;
     width: 0%;
-    background: #1e8857;
+    background: #C6C6C6;
     transition: all 350ms ease
 }
 
@@ -230,26 +237,25 @@ button:disabled:hover{
 }
 
 input.update-input, select.update-input{
-    width: 70%;
+    width: 60%;
     margin: 10px auto;
     border: 1px solid #FFF;
 }
 
 input.search-input{
-    width: 70%;
+    width: 60%;
     margin: 10px auto;
 }
 
 input.update-input:hover, select.update-input:hover,
 input.update-input:focus, select.update-input:focus {
-    width: 70%;
     margin: 10px auto;
     border: 1px solid #212121;
 }
 
 label.update-label{
     display: inline-block;
-    width: 30%;
+    width: 40%;
     float: left;
     text-transform: capitalize;
     font-weight: 700;
@@ -321,4 +327,51 @@ label.update-label{
     display: inline-block;
     width: 150px;
     height: 150px
+}
+
+.subscribe-student-form form{
+    padding: 0% 20%
+}
+
+.subscribe-student-form input, .subscribe-student-form select{
+    display: inline-block;
+    max-width: 100%;
+    float: left;
+    margin: 10px 0%;
+}
+
+.subscribe-student-form input[type=date], .subscribe-student-form select{
+    max-height: 30px
+}
+
+.error-container, .success-container{
+    display: inline-block;
+    margin: 15px auto;
+    max-width: 450px;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #212121;
+    border-radius: 2px;
+}
+
+.error-container{
+    color:rgb(139, 69, 69);
+    border-color: rgb(139, 69, 69);
+    background: rgba(139, 69, 69, 0.15);
+}
+
+.success-container{
+    color:rgb(69, 139, 89);
+    border-color: rgb(69, 139, 89);
+    background: rgba(69, 139, 89, 0.15);
+}
+
+.subscribe-student-container, .update-container{
+    display: block;
+    width: 50%;
+    float: left;
+}
+
+.head{
+    text-align: center
 }
