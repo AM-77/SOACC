@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { error_handler } from '../redux-store/actions/authActionCreator'
+import { error_handler, clear_error } from '../redux-store/actions/authActionCreator'
 import Axios from 'axios'
 
 class DepChef extends Component {
@@ -15,7 +15,7 @@ class DepChef extends Component {
     }
 
     componentDidMount() {
-        this.get_data()
+        this.get_data(true)
     }
 
     onCheck = e => {
@@ -26,7 +26,14 @@ class DepChef extends Component {
                 .then(result => {
                     this.get_data()
                 })
-                .catch(err => this.props.error_handler(err))
+                .catch(err => {
+                    const error = {
+                        status: err.response.status,
+                        status_text: err.response.statusText,
+                        message: err.response.data.message
+                    }
+                    this.fire_error(error)
+                })
         }
         if (e.target.name === "insc") {
             this.setState(state => ({ insc: checked }))
@@ -34,23 +41,92 @@ class DepChef extends Component {
                 .then(result => {
                     this.get_data()
                 })
-                .catch(err => this.props.error_handler(err))
+                .catch(err => {
+                    const error = {
+                        status: err.response.status,
+                        status_text: err.response.statusText,
+                        message: err.response.data.message
+                    }
+                    this.fire_error(error)
+                })
         }
 
     }
 
-    get_data = () => {
+    get_data = (mounting = false) => {
         Axios.get("http://localhost:3303/oc-service/insc/" + this.state.the_year, { headers: { authorization: "Bearer " + this.props.token } })
             .then(res => {
-                this.setState(state => ({ year: res.data.result.year.year_is_open, insc: res.data.result.insc_is_open }))
+
+                if (mounting) {
+                    this.setState(state => ({ year: res.data.result.year.year_is_open, insc: res.data.result.insc_is_open }))
+                } else {
+                    const success = {
+                        status: "",
+                        message: ""
+                    }
+                    success.status = "Year / Inscriptions"
+                    if (res.data.result.year.year_is_open) {
+                        if (res.data.result.insc_is_open) {
+                            success.message = "The Year & The Inscriptions Were Opend Successfully"
+                        } else {
+                            success.message = "The Year Was Opend & The Inscriptions Was Closed, Successfully"
+                        }
+                    } else {
+                        success.message = "The Year & The Inscriptions Were Closed Successfully"
+                    }
+
+                    this.setState(state => ({ success, year: res.data.result.year.year_is_open, insc: res.data.result.insc_is_open }))
+                    this.clear_success()
+                }
             })
-            .catch(err => this.props.error_handler(err))
+            .catch(err => {
+                const error = {
+                    status: err.response.status,
+                    status_text: err.response.statusText,
+                    message: err.response.data.message
+                }
+                this.fire_error(error)
+            })
+    }
+
+    fire_error = error => {
+        this.props.error_handler(error)
+        console.clear()
+        setTimeout(() => {
+            this.props.clear_error()
+        }, 3000)
+    }
+
+    clear_success = () => {
+        setTimeout(() => {
+            this.setState(state => ({ success: null }))
+        }, 3000)
     }
 
     render() {
         return (
             <div className="dep-chef-container">
-                <h1>Dep Chef</h1>
+                <div className="head">
+                    <h1>Dep Chef</h1>
+                    {
+                        this.props.error
+                            ?
+                            <div className="error-container">
+                                <p className="the-error"><b className="error-status">{this.props.error.status_text}: </b><span className="error-message">{this.props.error.message}</span></p>
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        this.state.success
+                            ?
+                            <div className="success-container">
+                                <p className="the-success"><b className="success-status">{this.state.success.status}: </b><span className="success-message">{this.state.success.message}</span></p>
+                            </div>
+                            :
+                            null
+                    }
+                </div>
                 <div>
                     <h2 className="title">Year {this.state.the_year}</h2>
                     <div>
@@ -60,9 +136,9 @@ class DepChef extends Component {
                 </div>
 
                 <div>
-                    <h2 className="title">Inscritions</h2>
+                    <h2 className="title">Inscriptions</h2>
                     <div>
-                        <h4 className="check-label">The Inscritions Of {this.state.the_year} Is {this.state.insc ? "Open" : "Closed"}</h4>
+                        <h4 className="check-label">The Inscriptions Of {this.state.the_year} Is {this.state.insc ? "Open" : "Closed"}</h4>
                         <input className="check-input" type="checkbox" disabled={!this.state.year} onChange={this.onCheck} checked={this.state.insc} name="insc" />
                     </div>
                 </div>
@@ -74,7 +150,8 @@ class DepChef extends Component {
 const mapStateToProps = (store) => ({ ...store })
 const dispatchStateToProps = (dispatch) => {
     return {
-        error_handler: (error) => dispatch(error_handler(error))
+        error_handler: (error) => dispatch(error_handler(error)),
+        clear_error: () => dispatch(clear_error())
     }
 }
 
