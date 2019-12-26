@@ -107,9 +107,9 @@ class Subscribe extends Component {
 }
 
 const mapStateToProps = (store) => ({ ...store })
-const dispatchStateToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
     error_handler: (error) => dispatch(error_handler(error)),
     clear_error: () => dispatch(clear_error())
 })
 
-export default connect(mapStateToProps, dispatchStateToProps)(Subscribe)
+export default connect(mapStateToProps, mapDispatchToProps)(Subscribe)

@@ -33,8 +33,6 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = (store) => {
-    return { ...store }
-}
+const mapStateToProps = (store) => ({ ...store })
 
 export default connect(mapStateToProps)(Home)

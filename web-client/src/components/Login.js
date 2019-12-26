@@ -90,11 +90,11 @@ class Login extends Component {
 }
 
 const mapStateToProps = (store) => ({ ...store })
-const dispatchStateToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
     login: (token, user) => dispatch(login(token, user)),
     logout: () => dispatch(logout()),
     error_handler: (error) => dispatch(error_handler(error)),
     clear_error: () => dispatch(clear_error())
 })
 
-export default connect(mapStateToProps, dispatchStateToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

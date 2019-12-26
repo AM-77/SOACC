@@ -148,11 +148,9 @@ class DepChef extends Component {
 }
 
 const mapStateToProps = (store) => ({ ...store })
-const dispatchStateToProps = (dispatch) => {
-    return {
-        error_handler: (error) => dispatch(error_handler(error)),
-        clear_error: () => dispatch(clear_error())
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    error_handler: (error) => dispatch(error_handler(error)),
+    clear_error: () => dispatch(clear_error())
+})
 
-export default connect(mapStateToProps, dispatchStateToProps)(DepChef)
+export default connect(mapStateToProps, mapDispatchToProps)(DepChef)

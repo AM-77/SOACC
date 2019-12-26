@@ -41,12 +41,10 @@ class IsLogged extends Component {
 
 const mapStateToProps = (store) => ({ ...store })
 
-const dispatchStateToProps = (dispatch) => {
-    return {
-        load_user: (token, user) => dispatch(load_user(token, user)),
-        clear_error: () => dispatch(clear_error()),
-        logout: () => dispatch(logout())
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+    load_user: (token, user) => dispatch(load_user(token, user)),
+    clear_error: () => dispatch(clear_error()),
+    logout: () => dispatch(logout())
+})
 
-export default connect(mapStateToProps, dispatchStateToProps)(IsLogged)
+export default connect(mapStateToProps, mapDispatchToProps)(IsLogged)
