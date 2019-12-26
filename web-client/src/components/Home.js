@@ -8,7 +8,6 @@ import LibAgent from './LibAgent'
 
 class Home extends Component {
     render() {
-        console.log("Home props: ", this.props)
         return <IsLogged>
             <div>
                 {this.props.user
