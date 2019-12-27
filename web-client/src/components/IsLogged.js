@@ -18,16 +18,26 @@ class IsLogged extends Component {
                         this.props.load_user(token, res.data.user)
                     })
                     .catch(err => {
-                        const error = {
-                            status: err.response.status,
-                            status_text: err.response.statusText,
-                            message: err.response.data.message
+                        let error = {}
+                        if (err.response) {
+                            error = {
+                                status: err.response.status,
+                                status_text: err.response.statusText,
+                                message: err.response.data.message
+                            }
+                        } else {
+                            error = {
+                                status: "",
+                                status_text: "Error",
+                                message: "Something Went Wrong, Try Again Later."
+                            }
                         }
                         this.props.logout(error)
                         console.clear()
                         setTimeout(() => {
                             this.props.clear_error()
                         }, 3000)
+
                     })
 
                 return <p>loading ...</p>
