@@ -10,7 +10,7 @@ const Student = require("./models/student")
 
 auth_router.get("/students", auth, (req, res, next) => {
     Student.find().exec()
-        .then(student => { res.status(200).json({ student }) })
+        .then(students => { res.status(200).json({ students }) })
         .catch(error => res.status(500).json({ error, message: "there was an error" }))
 })
 
