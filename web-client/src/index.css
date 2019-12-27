@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: "source sans pro"
 }
 
 h1{
@@ -91,7 +92,7 @@ button:hover{
 .navbar-container .nav-links .nav-link{
     padding: 5px;
     margin-right: 15px;
-    line-height: 2.7;
+    line-height: 3;
 }
 
 .navbar-container .nav-links a.nav-link.active{
@@ -113,8 +114,8 @@ button:hover{
 
 .nav-logged h4{
     display: inline-block;
-    font-size: 17px;
-    line-height: 2.7;
+    font-size: 14px;
+    line-height: 3;
     float: left;
     margin-left: 5px;
 }
@@ -239,7 +240,8 @@ button:disabled:hover{
 input.update-input, select.update-input{
     width: 60%;
     margin: 10px auto;
-    border: 1px solid #FFF;
+    border: 1px solid transparent;
+    background: transparent
 }
 
 input.search-input{
@@ -368,10 +370,83 @@ label.update-label{
 
 .subscribe-student-container, .update-container{
     display: block;
-    width: 50%;
-    float: left;
+    width: 100%;
 }
 
 .head{
     text-align: center
+}
+
+.tabs{
+    display: block;
+    width: 100%;
+    background: #00000007;
+    padding-bottom: 50px
+}
+
+.tabs .tabs-nav{
+    display:block; 
+    width: 100%;
+    height: 45px;
+    background: #21212121;
+    margin-top: 25px;
+}
+
+.tabs .tabs-nav button{
+    display: inline-block; 
+    float: left;
+    width: auto;
+    text-transform: capitalize;
+    box-shadow: none;
+    border: none;
+    border-radius: 0px;
+    background: #212121;
+    color: #dcdcdc;
+    height: 100%;
+    font-size: 14px;
+    padding: 0 15px;
+    margin: 0;
+}
+
+.tabs .tabs-nav .active-tab{
+    opacity: 1;
+}
+
+.tabs .tabs-body{
+    display: block;
+    width: 100%;
+}
+
+.student-list-container .no-student{
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.student-list-container .student{
+    display: block;
+    width: 33.333%;
+    float: left;
+    text-align: left;
+    padding-left: 25px;
+}
+
+.student-list-container .student p{
+    line-height: 1.85;
+    font-size: 15px;
+}
+
+.student-list-container .student b{
+    text-transform: capitalize;
+    text-decoration: underline;
+    margin-right: 5px;
+}
+
+.student-list-container .student a{
+    text-decoration: none;
+    font-weight: 700;
+    color: #1e8857
+}
+
+.student-list-container .student a:hover{
+    text-decoration: underline
 }
